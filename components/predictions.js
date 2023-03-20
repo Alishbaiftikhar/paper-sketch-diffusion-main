@@ -23,10 +23,13 @@ export default function Predictions({ initialPrompt,predictions, submissionCount
     console.log(data);
     setPrompt(localStorage.getItem("value-prompt"))
     console.log(prompt);
-
+    const urlParams=new URLSearchParams(window.location.search);
+    const myParam = urlParams.get('designerid');
+    console.log(myParam);
     const res = axios.post("https://vdesigners.herokuapp.com/api/project/", {
       image: data,
       projectName: prompt,
+      designerId:"63960869b6e5bd10f6d1979d"
     });
 
     console.log("response" + res.data);
