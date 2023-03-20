@@ -1,4 +1,4 @@
-# 🖍️ Scribble Diffusion
+# 🖍️ Pattern Generation
 
 Try it out at [scribblediffusion.com](https://scribblediffusion.com)
 
