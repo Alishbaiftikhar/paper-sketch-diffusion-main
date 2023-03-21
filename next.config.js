@@ -3,12 +3,12 @@ const nextConfig = {
   reactStrictMode: false,
   swcMinify: true,
   images: {
-    domains: [
-      "replicate.com",
-      "replicate.delivery",
-      "user-images.githubusercontent.com",
-      "upcdn.io"
-    ],
+    // domains: [
+    //   "replicate.com",
+    //   "replicate.delivery",
+    //   "user-images.githubusercontent.com",
+    //   "upcdn.io"
+    // ],
   }
 };
 
