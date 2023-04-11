@@ -5,7 +5,8 @@ import Link from "next/link";
 import { Fragment, useEffect, useRef, useState } from "react";
 import Loader from "components/loader";
 import axios from 'axios';
-
+import { getStorage,getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "../firebase";
 export default function Predictions({ initialPrompt,predictions, submissionCount }) {
   const scrollRef = useRef(null);
   const [prompt, setPrompt] = useState(initialPrompt);
@@ -18,7 +19,17 @@ export default function Predictions({ initialPrompt,predictions, submissionCount
 
   if (submissionCount === 0) return null;
 
-  const sendres = (data) => {
+  const sendres = async(data) => {
+  const response = await fetch(data);
+  const blob = await response.blob();
+  console.log("blob"+blob);
+  const imageName = Date.now() + ".png"; // A unique name for the image
+const storageRef = ref(storage, `images/${imageName}`);
+ // const imageRef = storageRef.child(imageName);
+ const snapshot = await uploadBytes(storageRef, blob);
+ // await storageRef.put(blob);
+  const downloadURL = await getDownloadURL(snapshot.ref);
+  console.log(downloadURL)
     console.log("in");
     console.log(data);
     setPrompt(localStorage.getItem("value-prompt"))
@@ -26,10 +37,10 @@ export default function Predictions({ initialPrompt,predictions, submissionCount
     const urlParams=new URLSearchParams(window.location.search);
     const myParam = urlParams.get('designerid');
     console.log(myParam);
-    const res = axios.post("https://vdesigners.herokuapp.com/api/project/", {
-      image: data,
+    const res = await axios.post("https://vdesigners.herokuapp.com/api/project/", {
+      image: downloadURL,
       projectName: prompt,
-      designerId:"63960869b6e5bd10f6d1979d"
+      designerId:"63ff3d6cf4dc279c6e0edc03"
     });
 
     console.log("response" + res.data);
@@ -73,7 +84,8 @@ export function Prediction({
   initialPrompt,
 }) {
   const [linkCopied, setLinkCopied] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
+console.log("hehe"+prediction.input);
   const copyLink = () => {
     const url =
       window.location.origin +
@@ -85,38 +97,52 @@ export function Prediction({
 
   // Clear the "Copied!" message after 4 seconds
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setLinkCopied(false);
-    }, 4 * 1000);
+    // const intervalId = setInterval(() => {
+    //   setLinkCopied(false);
+    // }, 4 * 1000);
 
-    return () => clearInterval(intervalId);
-  }, []);
+    // return () => clearInterval(intervalId);
+    if (prediction.output?.length) {
+      setIsLoading(true);
+      sendres(prediction.output[prediction.output.length - 1])
+        .then(() => {
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+      }
+  }, [prediction, sendres]);
 
   if (!prediction) return null;
   return (
     <div className="mt-6 mb-12">
-      <div className="shadow-lg border my-5 p-5 bg-white flex">
-        <div className="w-1/2 aspect-square relative border">
+    <div className="shadow-lg border my-5 p-5 bg-white flex">
+      <div className="w-1/2 aspect-square relative border">
+        <img
+          src={prediction.input.image}
+          alt="input scribble"
+          className="w-full aspect-square"
+        />
+      </div>
+      <div className="w-1/2 aspect-square relative">
+        {isLoading ? (
+          <div className="grid h-full place-items-center">
+            <Loader />
+          </div>
+        ) : prediction.output?.length ? (
           <img
-            src={prediction.input.image}
-            alt="input scribble"
+            src={prediction.output[prediction.output.length - 1]}
+            alt="output image"
             className="w-full aspect-square"
           />
-        </div>
-        <div className="w-1/2 aspect-square relative">{prediction.output?.length ? (sendres(prediction.output[prediction.output.length - 1])):(console.log("123"))}
-          {prediction.output?.length ? (
-            <img
-              src={prediction.output[prediction.output.length - 1]}
-              alt="output image"
-              className="w-full aspect-square"
-            />
-          ) : (
-            <div className="grid h-full place-items-center">
-              <Loader />
-            </div>
-          )}
-        </div>
+        ) : (
+          <div className="grid h-full place-items-center">
+            <Loader />
+          </div>
+        )}
       </div>
+    </div>
       <div className="text-center px-4 opacity-60 text-xl">
         &ldquo;{prediction.input.prompt}&rdquo;
       </div>
