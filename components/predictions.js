@@ -39,7 +39,7 @@ const storageRef = ref(storage, `images/${imageName}`);
     console.log(myParam);
     const res = await axios.post("https://vdesigners.herokuapp.com/api/project/", {
       image: downloadURL,
-      projectName: prompt,
+      projectName: imageName,
       designerId:"63ff3d6cf4dc279c6e0edc03"
     });
 
