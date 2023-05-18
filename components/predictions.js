@@ -7,6 +7,7 @@ import Loader from "components/loader";
 import axios from 'axios';
 import { getStorage,getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../firebase";
+const dataList = [];
 export default function Predictions({ initialPrompt,predictions, submissionCount }) {
   const scrollRef = useRef(null);
   const [prompt, setPrompt] = useState(initialPrompt);
@@ -20,6 +21,17 @@ export default function Predictions({ initialPrompt,predictions, submissionCount
   if (submissionCount === 0) return null;
 
   const sendres = async(data) => {
+    let count=0
+    console.log(dataList)
+    if (dataList.includes(data)) {
+      console.log("Data value already exists.");
+      count=count+1;
+      return;
+    }
+    console.log(count)
+    if (count==0){
+      // Add data value to the array list
+    dataList.push(data);
   const response = await fetch(data);
   const blob = await response.blob();
   console.log("blob"+blob);
@@ -44,6 +56,7 @@ const storageRef = ref(storage, `images/${imageName}`);
     });
 
     console.log("response" + res.data);
+  }
   };
 
   return (
