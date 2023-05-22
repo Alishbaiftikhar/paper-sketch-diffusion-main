@@ -11,7 +11,7 @@ const dataList = [];
 export default function Predictions({ initialPrompt,predictions, submissionCount }) {
   const scrollRef = useRef(null);
   const [prompt, setPrompt] = useState(initialPrompt);
-
+  const [userId,setUserid]=useState('');
   useEffect(() => {
     if (submissionCount > 0) {
       scrollRef.current.scrollIntoView({ behavior: "smooth" });
@@ -23,6 +23,9 @@ export default function Predictions({ initialPrompt,predictions, submissionCount
   const sendres = async(data) => {
     let count=0
     console.log(dataList)
+    const urlParams = new URLSearchParams(window.location.search);
+    let getID=urlParams.get("data")
+    console.log("received user id",getID)
     if (dataList.includes(data)) {
       console.log("Data value already exists.");
       count=count+1;
@@ -52,7 +55,7 @@ const storageRef = ref(storage, `images/${imageName}`);
     const res = await axios.post("https://vdesigners.herokuapp.com/api/project/", {
       image: downloadURL,
       projectName: imageName,
-      designerId:"63ff3d6cf4dc279c6e0edc03"
+      designerId:getID
     });
 
     console.log("response" + res.data);
