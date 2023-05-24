@@ -22,7 +22,7 @@ export default function Predictions({ initialPrompt,predictions, submissionCount
 
   const sendres = async(data) => {
     let count=0
-    console.log(dataList)
+    console.log("values are",dataList)
     const urlParams = new URLSearchParams(window.location.search);
     let getID=urlParams.get("data")
     console.log("received user id",getID)
@@ -55,7 +55,8 @@ const storageRef = ref(storage, `images/${imageName}`);
     const res = await axios.post("https://vdesigners.herokuapp.com/api/project/", {
       image: downloadURL,
       projectName: imageName,
-      designerId:getID
+      designerId:getID,
+      replicate:data
     });
 
     console.log("response" + res.data);

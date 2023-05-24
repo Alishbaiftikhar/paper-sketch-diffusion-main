@@ -3,13 +3,13 @@ import { getStorage } from "firebase/storage";
 import { getFirestore } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 const firebaseConfig = {
-    apiKey: "AIzaSyBvoy_Uj7g5cbuyF-0lNiKCTmTEGViBSJE",
-    authDomain: "vdesigners-5b906.firebaseapp.com",
-    projectId: "vdesigners-5b906",
-    storageBucket: "vdesigners-5b906.appspot.com",
-    messagingSenderId: "629774763692",
-    appId: "1:629774763692:web:c565b8b650d190da950109",
-    measurementId: "G-7NEB7W4DBG",
+  apiKey: "AIzaSyApDZn5sy4vmSefFE0wLHCK0R-SVIMOL9s",
+  authDomain: "imagegeneration-8849f.firebaseapp.com",
+  projectId: "imagegeneration-8849f",
+  storageBucket: "imagegeneration-8849f.appspot.com",
+  messagingSenderId: "634889050295",
+  appId: "1:634889050295:web:4262692e6dcf0bee9b5532",
+  measurementId: "G-YYQG3EDGF4"
   };
 initializeApp(firebaseConfig);
 const storage = getStorage();
